@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(dotnet restore:*)",
+      "Bash(\"C:\\\\Workspaces\\\\Projects\\\\pet\\\\ScanQRWin\\\\.gitignore\":*)",
+      "Bash(dotnet build:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Read(//c/Workspaces/Projects/pet/ScanQRWin/**)",
+      "Bash(find /c/Workspaces/Projects/pet/ScanQRWin -name *.cs -o -name *.Designer.cs)"
+    ]
+  }
+}
