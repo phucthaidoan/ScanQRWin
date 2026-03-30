@@ -2,6 +2,10 @@
 
 A .NET 9 Windows Forms desktop app that decodes QR codes from images.
 
+## Demo
+
+![ScanQRWin decoding a QR code from an image](test-data/2026-03-30%2023_32_08-Tmp%20-%20File%20Explorer.png)
+
 ## Features
 
 - **Browse** — Open an image file via file dialog (PNG, JPG, BMP, GIF, TIFF)
