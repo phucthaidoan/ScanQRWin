@@ -11,7 +11,6 @@ public partial class MainForm : Form
     {
         InitializeComponent();
         KeyPreview = true;
-        AllowDrop = true;
 
         btnBrowse.Click += BtnBrowse_Click;
         KeyDown += MainForm_KeyDown;
@@ -34,7 +33,9 @@ public partial class MainForm : Form
         Bitmap? bmp = LoadBitmapFromFile(dlg.FileName);
         if (bmp is null) return;
 
+        var old = pictureBox.Image;
         pictureBox.Image = bmp;
+        old?.Dispose();
         ProcessBitmap(bmp, noQrMessage: "No QR code found in image.");
     }
 
@@ -45,15 +46,16 @@ public partial class MainForm : Form
         if (e.Control && e.KeyCode == Keys.V)
         {
             SetStatus(Color.Gray, "Ready.");
-            Image? img = Clipboard.GetImage();
-            if (img is null)
+            Bitmap? bmp = Clipboard.GetImage() as Bitmap;
+            if (bmp is null)
             {
                 SetStatus(Color.Red, "No image found in clipboard.");
                 return;
             }
 
-            Bitmap bmp = new(img);
+            var old = pictureBox.Image;
             pictureBox.Image = bmp;
+            old?.Dispose();
             ProcessBitmap(bmp, noQrMessage: "No QR code found in image.");
         }
     }
@@ -77,7 +79,9 @@ public partial class MainForm : Form
         Bitmap? bmp = LoadBitmapFromFile(files[0]);
         if (bmp is null) return;
 
+        var old = pictureBox.Image;
         pictureBox.Image = bmp;
+        old?.Dispose();
         ProcessBitmap(bmp, noQrMessage: "No QR code found in image.");
     }
 
@@ -89,7 +93,7 @@ public partial class MainForm : Form
         {
             return new Bitmap(path);
         }
-        catch
+        catch // GDI+ throws OutOfMemoryException for unsupported/corrupt files; catch-all is intentional
         {
             SetStatus(Color.Red, "Could not load image file.");
             return null;
@@ -113,7 +117,7 @@ public partial class MainForm : Form
 
     private static string? DecodeImage(Bitmap bmp)
     {
-        var reader = new BarcodeReader();
+        var reader = new BarcodeReader { Options = { PossibleFormats = [BarcodeFormat.QR_CODE] } };
         var result = reader.Decode(bmp);
         return result?.Text;
     }
